@@ -5,6 +5,9 @@ Whether you're a teacher looking to simplify grade entry, a parent wanting to tr
 
 Key Features:
 For Teachers: Easily input grades for students and generate professional, detailed report cards.
+
 For Parents: Stay informed with online access to your child's report card and academic progress.
+
 For Students: Access and download report cards in PDF format, tracking your performance in real-time.
+
 For Administrators: Manage student, teacher, and subject data, and ensure secure report generation and delivery.
