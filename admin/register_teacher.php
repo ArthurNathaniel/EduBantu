@@ -188,10 +188,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <label>Password:</label>
           <input type="password" placeholder="Enter your password" name="password" required>
         </div>
-        </div>
         <div class="forms">
           <button type="submit">Register Teacher</button>
         </div>
+        </div>
+       
       </form>
     </div>
 </body>

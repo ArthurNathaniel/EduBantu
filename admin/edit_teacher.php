@@ -219,18 +219,20 @@ $classes_result = $conn->query($classes_sql);
                 <div class="forms">
                     <label for="education_level">Level of Education:</label>
                     <select name="education_level" required>
-                        <option value="High School" <?php echo $teacher['education_level'] == 'High School' ? 'selected' : ''; ?>>High School</option>
-                        <option value="Bachelor's" <?php echo $teacher['education_level'] == 'Bachelor\'s' ? 'selected' : ''; ?>>Bachelor's</option>
-                        <option value="Master's" <?php echo $teacher['education_level'] == 'Master\'s' ? 'selected' : ''; ?>>Master's</option>
+                        <option value="SHS" <?php echo $teacher['education_level'] == 'SHS' ? 'selected' : ''; ?>>SHS</option>
+                        <option value="Diploma" <?php echo $teacher['education_level'] == 'Diploma' ? 'selected' : ''; ?>>Diploma</option>
+                        <option value="HND" <?php echo $teacher['education_level'] == 'HND' ? 'selected' : ''; ?>>HND</option>
+                        <option value="Degree" <?php echo $teacher['education_level'] == 'Degree' ? 'selected' : ''; ?>>Degree</option>
+                        <option value="Master" <?php echo $teacher['education_level'] == 'Master' ? 'selected' : ''; ?>>Master</option>
                         <option value="PhD" <?php echo $teacher['education_level'] == 'PhD' ? 'selected' : ''; ?>>PhD</option>
                     </select>
                 </div>
                 <div class="forms">
                     <label for="password">Password:</label>
-                    <input type="password" name="password" >
+                    <input type="password" name="password" placeholder="Password (leave blank to keep unchanged)" >
                 </div>
                 <div class="forms">
-                    <input type="submit" value="Update Teacher">
+                    <button type="submit">Update Teacher</button>
                 </div>
             </div>
         </form>

@@ -78,6 +78,7 @@ $teachers_result = $conn->query($teachers_sql);
                                 <p>Last Name: {$teacher['last_name']}</p>
                                 <p>Date of Birth: {$teacher['dob']}</p>
                                 <p>Gender: {$teacher['gender']}</p>
+                                 <p>Education Level: {$teacher['education_level']}</p>
                                 <p>Email: {$teacher['email']}</p>
                                 <p>Phone Number: {$teacher['phone']}</p>
                                 <p>House Number: {$teacher['house_number']}</p>

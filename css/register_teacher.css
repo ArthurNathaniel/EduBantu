@@ -14,7 +14,9 @@
 .forms button{
     margin-top: 30px;
 }
-
+.edit_teacher{
+    padding: 0 10%; 
+}
 @media only screen and (max-width: 1195px) {
   
     .forms_groups{
@@ -27,6 +29,9 @@
 @media only screen and (max-width: 778px) {
     .register_teacher_all{
         padding: 0 5%;
+    }
+    .edit_teacher{
+        padding: 0 5%; 
     }
     .forms_groups{
         display: grid;
