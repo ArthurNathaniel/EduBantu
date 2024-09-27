@@ -119,27 +119,124 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeEditModal()">&times;</span>
-            <h2>Edit Teacher</h2>
-            <form id="editForm">
-                <input type="hidden" name="id" id="editTeacherId">
+  <!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Edit Teacher Details</h2>
+        <form id="editForm">
+            <input type="hidden" name="id" id="editTeacherId">
+
+            <div class="forms">
                 <label>First Name:</label>
-                <input type="text" name="first_name" id="editFirstName" required>
+                <input type="text" placeholder="Enter your first name" name="first_name" id="editFirstName" required>
+            </div>
+
+            <div class="forms">
                 <label>Middle Name:</label>
-                <input type="text" name="middle_name" id="editMiddleName">
+                <input type="text" placeholder="Enter your middle name" name="middle_name" id="editMiddleName">
+            </div>
+
+            <div class="forms">
                 <label>Last Name:</label>
-                <input type="text" name="last_name" id="editLastName" required>
+                <input type="text" placeholder="Enter your last name" name="last_name" id="editLastName" required>
+            </div>
+            
+            <div class="forms">
+                <label>Date of Birth:</label>
+                <input type="date" name="dob" id="editDob" required>
+            </div>
+
+            <div class="forms">
+                <label>Gender:</label>
+                <select name="gender" id="editGender" required>
+                    <option value="" selected hidden>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="forms">
+                <label>Level of Education:</label>
+                <select name="education_level" id="editEducationLevel" required>
+                    <option value="" selected hidden>Select Level of Education</option>
+                    <option value="SHS">SHS</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="HND">HND</option>
+                    <option value="Degree">Degree</option>
+                    <option value="Master">Master</option>
+                    <option value="PhD">PhD</option>
+                </select>
+            </div>
+
+            <div class="forms">
                 <label>Email:</label>
-                <input type="email" name="email" id="editEmail" required>
-                <label>Phone:</label>
-                <input type="text" name="phone" id="editPhone" required>
-                <button type="submit">Save Changes</button>
-            </form>
-        </div>
+                <input type="email" placeholder="Enter your email address" name="email" id="editEmail" required>
+            </div>
+
+            <div class="forms">
+                <label>Phone Number:</label>
+                <input type="text" placeholder="Enter your phone number" name="phone" id="editPhone" required>
+            </div>
+
+            <div class="forms">
+                <label>House Number:</label>
+                <input type="text" placeholder="Enter your house number" name="house_number" id="editHouseNumber" required>
+            </div>
+
+            <div class="forms">
+                <label>Hometown:</label>
+                <input type="text" placeholder="Enter your hometown" name="hometown" id="editHometown" required>
+            </div>
+
+            <div class="forms">
+                <label>Emergency Contact Person Name:</label>
+                <input type="text" placeholder="Enter your emergency contact person name" name="emergency_contact_name" id="editEmergencyContactName" required>
+            </div>
+
+            <div class="forms">
+                <label>Emergency Contact Phone:</label>
+                <input type="number" min="0" placeholder="Enter your emergency contact phone number" name="emergency_contact_phone" id="editEmergencyContactPhone" required>
+            </div>
+
+            <div class="forms">
+                <label>Emergency Contact Relationship:</label>
+                <select name="emergency_contact_relationship" id="editEmergencyContactRelationship" required>
+                    <option value="" selected hidden>Select Emergency Contact Relationship</option>
+                    <option value="Parent">Parent</option>
+                    <option value="Sister">Sister</option>
+                    <option value="Brother">Brother</option>
+                    <option value="Friend">Friend</option>
+                    <option value="Family">Family</option>
+                </select>
+            </div>
+
+            <div class="forms">
+                <label>Assign Class:</label>
+                <select name="class_id" id="editClassId" required>
+                    <option value="" selected hidden>Assign Class</option>
+                    <option value="0">None</option> <!-- Add 'None' option -->
+                    <?php
+                    // Fetch classes from the database
+                    $sql = "SELECT * FROM classes";
+                    $result = $conn->query($sql);
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<option value='" . $row['id'] . "'>" . $row['class_name'] . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="forms">
+                <label>Password:</label>
+                <input type="password" placeholder="Enter your password" name="password" id="editPassword" required>
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
     </div>
+</div>
+
 
     <!-- Delete Modal -->
     <div id="deleteModal" class="modal">
@@ -177,18 +274,29 @@ $result = $conn->query($sql);
         }
 
         function openEditModal(id) {
-            fetch(`get_teacher.php?id=${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('editTeacherId').value = data.id;
-                    document.getElementById('editFirstName').value = data.first_name;
-                    document.getElementById('editMiddleName').value = data.middle_name;
-                    document.getElementById('editLastName').value = data.last_name;
-                    document.getElementById('editEmail').value = data.email;
-                    document.getElementById('editPhone').value = data.phone;
-                    document.getElementById('editModal').style.display = "block";
-                });
-        }
+    fetch(`get_teacher.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('editTeacherId').value = data.id;
+            document.getElementById('editFirstName').value = data.first_name;
+            document.getElementById('editMiddleName').value = data.middle_name;
+            document.getElementById('editLastName').value = data.last_name;
+            document.getElementById('editDob').value = data.dob; // Assuming you have 'dob' in your database
+            document.getElementById('editGender').value = data.gender;
+            document.getElementById('editEducationLevel').value = data.education_level;
+            document.getElementById('editEmail').value = data.email;
+            document.getElementById('editPhone').value = data.phone;
+            document.getElementById('editHouseNumber').value = data.house_number;
+            document.getElementById('editHometown').value = data.hometown;
+            document.getElementById('editEmergencyContactName').value = data.emergency_contact_name;
+            document.getElementById('editEmergencyContactPhone').value = data.emergency_contact_phone;
+            document.getElementById('editEmergencyContactRelationship').value = data.emergency_contact_relationship;
+            document.getElementById('editClassId').value = data.class_id; // Assuming you have 'class_id' in your database
+            document.getElementById('editPassword').value = ''; // Clear password field
+            document.getElementById('editModal').style.display = "block";
+        });
+}
+
 
         function closeEditModal() {
             document.getElementById('editModal').style.display = "none";
