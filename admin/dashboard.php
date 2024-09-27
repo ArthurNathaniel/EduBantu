@@ -16,8 +16,11 @@ if (!isset($_SESSION['admin'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <?php include '../cdn.php' ?>
+    <link rel="stylesheet" href="../css/base.css">
 </head>
 <body>
+<?php include 'sidebar.php' ?>
     <h2>Welcome to the Admin Dashboard</h2>
     
     <p>Hello, <?php echo $_SESSION['admin']; ?>! You are logged in as an admin.</p>

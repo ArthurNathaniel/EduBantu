@@ -72,12 +72,17 @@ select:focus {
 }
 
 .logo {
-  height: 95px;
-  width: 150px;
+  height: 130px;
+  width: 130px;
   background-image: url(../images/logo.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  border: 2px dashed #fc5185;
+  margin: 0 auto;
+  border-radius: 50%;
+  padding-bottom: 20px;
+ 
 }
 
 .mobile a {
@@ -106,6 +111,7 @@ select:focus {
 
 .mobile {
   display: none;
+
 }
 
 .mobile {

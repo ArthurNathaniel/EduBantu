@@ -8,6 +8,7 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
     </button>
 
     <div class="mobile">
+        <div class="logo"></div>
         <a href="dashboard.php" class="<?= $current_page === 'dashboard.php' ? 'active' : '' ?>">Dashboard</a>
         <a href="add_class.php" class="<?= $current_page === 'add_class.php' ? 'active' : '' ?>">Add Class</a>
         <a href="add_subject.php" class="<?= $current_page === 'add_subject.php' ? 'active' : '' ?>">Add Subject</a>
