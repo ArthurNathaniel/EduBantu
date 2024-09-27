@@ -9,13 +9,7 @@ if (!isset($_SESSION['admin'])) {
 }
 
 // Fetch all teachers from the database
-$sql = "SELECT t.id, t.name, t.dob, t.gender, t.education_level, t.email, t.phone, t.house_number, t.hometown, 
-        t.emergency_contact_name, t.emergency_contact_phone, t.emergency_contact_relationship, 
-        s.subject_name, c.class_name 
-        FROM teachers t 
-        JOIN subjects s ON t.subject_id = s.id 
-        JOIN classes c ON t.class_id = c.id";
-
+$sql = "SELECT * FROM teachers";
 $result = $conn->query($sql);
 ?>
 
@@ -25,27 +19,26 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Teachers</title>
+    <?php include '../cdn.php'; ?>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/view_teachers.css">
     <style>
-        /* Basic CSS for table and modal */
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid black;
+            margin: 20px 0;
         }
 
         th, td {
             padding: 10px;
             text-align: left;
+            border: 1px solid #ddd;
         }
 
         th {
             background-color: #f2f2f2;
         }
 
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -55,14 +48,17 @@ $result = $conn->query($sql);
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
         }
 
         .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
+            background-color: #fefefe;
+            margin: 5% auto;
             padding: 20px;
-            width: 50%;
+            border: 1px solid #888;
+            width: 80%;
         }
 
         .close {
@@ -78,151 +74,164 @@ $result = $conn->query($sql);
             text-decoration: none;
             cursor: pointer;
         }
-
-        .modal-buttons {
-            margin-top: 20px;
-        }
-
-        .modal-buttons button {
-            padding: 10px 20px;
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
+<?php include 'sidebar.php' ?>
+    <div class="view_teachers_all">
+        <div class="forms_title">
+            <h2>View Teachers</h2>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo $row['id']; ?></td>
+                    <td><?php echo $row['first_name'] . ' ' . ($row['middle_name'] ? $row['middle_name'] . ' ' : '') . $row['last_name']; ?></td>
+                    <td><?php echo $row['email']; ?></td>
+                    <td><?php echo $row['phone']; ?></td>
+                    <td>
+                        <button class="view-btn" onclick="viewTeacher(<?php echo $row['id']; ?>)">View</button>
+                        <button class="edit-btn" onclick="openEditModal(<?php echo $row['id']; ?>)">Edit</button>
+                        <button class="delete-btn" onclick="openDeleteModal(<?php echo $row['id']; ?>)">Delete</button>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 
-<h2>Teacher List</h2>
+    <!-- View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeViewModal()">&times;</span>
+            <h2>Teacher Details</h2>
+            <div id="teacherDetails"></div>
+        </div>
+    </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Date of Birth</th>
-            <th>Gender</th>
-            <th>Education Level</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Subject</th>
-            <th>Class</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php while ($row = $result->fetch_assoc()) { ?>
-        <tr>
-            <td><?php echo $row['name']; ?></td>
-            <td><?php echo $row['dob']; ?></td>
-            <td><?php echo $row['gender']; ?></td>
-            <td><?php echo $row['education_level']; ?></td>
-            <td><?php echo $row['email']; ?></td>
-            <td><?php echo $row['phone']; ?></td>
-            <td><?php echo $row['subject_name']; ?></td>
-            <td><?php echo $row['class_name']; ?></td>
-            <td>
-                <button onclick="openEditModal(<?php echo $row['id']; ?>)">Edit</button>
-                <button onclick="openDeleteModal(<?php echo $row['id']; ?>)">Delete</button>
-            </td>
-        </tr>
-        <?php } ?>
-    </tbody>
-</table>
-
-<!-- Edit Modal -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('editModal')">&times;</span>
-        <h2>Edit Teacher</h2>
-        <form id="editForm" method="POST" action="edit_teacher.php">
-            <input type="hidden" name="teacher_id" id="editTeacherId">
-            <label for="editName">Name:</label>
-            <input type="text" id="editName" name="name" required><br><br>
-            <label for="editDob">Date of Birth:</label>
-            <input type="date" id="editDob" name="dob" required><br><br>
-            <label for="editGender">Gender:</label>
-            <select id="editGender" name="gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select><br><br>
-            <label for="editEducationLevel">Education Level:</label>
-            <select id="editEducationLevel" name="education_level" required>
-                <option value="shs">SHS</option>
-                <option value="diploma">Diploma</option>
-                <option value="hnd">HND</option>
-                <option value="degree">Degree</option>
-                <option value="master">Master</option>
-                <option value="phd">PhD</option>
-            </select><br><br>
-            <label for="editEmail">Email:</label>
-            <input type="email" id="editEmail" name="email" required><br><br>
-            <label for="editPhone">Phone:</label>
-            <input type="tel" id="editPhone" name="phone" required><br><br>
-            <label for="editHouseNumber">House Number:</label>
-            <input type="text" id="editHouseNumber" name="house_number" required><br><br>
-            <label for="editHometown">Hometown:</label>
-            <input type="text" id="editHometown" name="hometown" required><br><br>
-            <label for="editEmergencyName">Emergency Contact Name:</label>
-            <input type="text" id="editEmergencyName" name="emergency_contact_name" required><br><br>
-            <label for="editEmergencyPhone">Emergency Contact Phone:</label>
-            <input type="tel" id="editEmergencyPhone" name="emergency_contact_number" required><br><br>
-            <label for="editEmergencyRelationship">Emergency Contact Relationship:</label>
-            <select id="editEmergencyRelationship" name="emergency_contact_relationship" required>
-                <option value="parent">Parent</option>
-                <option value="sister">Sister</option>
-                <option value="brother">Brother</option>
-                <option value="friend">Friend</option>
-                <option value="family">Family</option>
-            </select><br><br>
-            <label for="editPassword">Password:</label>
-            <input type="password" id="editPassword" name="password"><br><br>
-            <div class="modal-buttons">
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Teacher</h2>
+            <form id="editForm">
+                <input type="hidden" name="id" id="editTeacherId">
+                <label>First Name:</label>
+                <input type="text" name="first_name" id="editFirstName" required>
+                <label>Middle Name:</label>
+                <input type="text" name="middle_name" id="editMiddleName">
+                <label>Last Name:</label>
+                <input type="text" name="last_name" id="editLastName" required>
+                <label>Email:</label>
+                <input type="email" name="email" id="editEmail" required>
+                <label>Phone:</label>
+                <input type="text" name="phone" id="editPhone" required>
                 <button type="submit">Save Changes</button>
-                <button type="button" onclick="closeModal('editModal')">Cancel</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Delete Modal -->
-<div id="deleteModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('deleteModal')">&times;</span>
-        <h2>Are you sure you want to delete this teacher?</h2>
-        <form id="deleteForm" method="POST" action="delete_teacher.php">
-            <input type="hidden" name="teacher_id" id="deleteTeacherId">
-            <div class="modal-buttons">
-                <button type="submit">Yes, Delete</button>
-                <button type="button" onclick="closeModal('deleteModal')">Cancel</button>
-            </div>
-        </form>
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h2>Delete Teacher</h2>
+            <p>Are you sure you want to delete this teacher?</p>
+            <input type="hidden" id="deleteTeacherId">
+            <button onclick="deleteTeacher()">Yes, Delete</button>
+            <button onclick="closeDeleteModal()">Cancel</button>
+        </div>
     </div>
-</div>
 
-<script>
-    // Open Edit Modal
-    function openEditModal(teacherId) {
-        document.getElementById('editTeacherId').value = teacherId;
-        // Here, you can fetch the teacher's current data via Ajax if needed and populate the form
-        document.getElementById('editModal').style.display = 'block';
-    }
-
-    // Open Delete Modal
-    function openDeleteModal(teacherId) {
-        document.getElementById('deleteTeacherId').value = teacherId;
-        document.getElementById('deleteModal').style.display = 'block';
-    }
-
-    // Close Modal
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
+    <script>
+        function viewTeacher(id) {
+            fetch(`get_teacher.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    let details = `<p><strong>Name:</strong> ${data.first_name} ${data.middle_name ? data.middle_name : ''} ${data.last_name}</p>
+                                   <p><strong>Email:</strong> ${data.email}</p>
+                                   <p><strong>Phone:</strong> ${data.phone}</p>
+                                   <p><strong>Date of Birth:</strong> ${data.dob}</p>
+                                   <p><strong>Gender:</strong> ${data.gender}</p>
+                                   <p><strong>Education Level:</strong> ${data.education_level}</p>
+                                   <p><strong>House Number:</strong> ${data.house_number}</p>
+                                   <p><strong>Hometown:</strong> ${data.hometown}</p>
+                                   <p><strong>Emergency Contact:</strong> ${data.emergency_contact_name} (${data.emergency_contact_phone}, ${data.emergency_contact_relationship})</p>`;
+                    document.getElementById('teacherDetails').innerHTML = details;
+                    document.getElementById('viewModal').style.display = "block";
+                });
         }
-    }
-</script>
 
+        function closeViewModal() {
+            document.getElementById('viewModal').style.display = "none";
+        }
+
+        function openEditModal(id) {
+            fetch(`get_teacher.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('editTeacherId').value = data.id;
+                    document.getElementById('editFirstName').value = data.first_name;
+                    document.getElementById('editMiddleName').value = data.middle_name;
+                    document.getElementById('editLastName').value = data.last_name;
+                    document.getElementById('editEmail').value = data.email;
+                    document.getElementById('editPhone').value = data.phone;
+                    document.getElementById('editModal').style.display = "block";
+                });
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = "none";
+        }
+
+        document.getElementById('editForm').onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('edit_teacher.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        }
+
+        function openDeleteModal(id) {
+            document.getElementById('deleteTeacherId').value = id;
+            document.getElementById('deleteModal').style.display = "block";
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = "none";
+        }
+
+        function deleteTeacher() {
+            const id = document.getElementById('deleteTeacherId').value;
+            fetch('delete_teacher.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        }
+    </script>
 </body>
 </html>

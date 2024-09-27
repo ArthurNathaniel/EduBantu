@@ -6,7 +6,9 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
     <button id="toggleButton">
         <i class="fa-solid fa-bars-staggered"></i>
     </button>
-
+    <div class="logout">
+            <a href="logout.php" class="<?= $current_page === 'logout.php' ? 'active' : '' ?>">Logout</a>
+        </div>
     <div class="mobile">
         <div class="logo"></div>
         <a href="dashboard.php" class="<?= $current_page === 'dashboard.php' ? 'active' : '' ?>">Dashboard</a>
@@ -18,9 +20,7 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
 
 
         
-        <div class="logout">
-            <a href="logout.php" class="<?= $current_page === 'logout.php' ? 'active' : '' ?>">Logout</a>
-        </div>
+        
     </div>
 </div>
 

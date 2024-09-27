@@ -139,8 +139,9 @@ select:focus {
 
 .logout {
   position: fixed;
-  bottom: 20px;
-  width: 250px;
+ top: 0;
+ right: 0;
+ padding: 10px;
   height: 45px;
   display: flex;
   justify-content: center;
