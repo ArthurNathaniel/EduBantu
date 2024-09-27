@@ -1,0 +1,40 @@
+.login_all {
+  padding: 0 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow-y: scroll;
+}
+.login_box {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  min-width: 70%;
+  padding: 0 5%;
+  background-color: #fff;
+  padding-block: 30px;
+}
+
+@media only screen and (max-width: 1195px) {
+  .login_all {
+    padding: 0 20%;
+  }
+}
+
+@media only screen and (max-width: 995px) {
+  .login_all {
+    padding: 0 10%;
+  }
+}
+
+@media only screen and (max-width: 795px) {
+  .login_all {
+    padding: 0 5%;
+  }
+  .login_box {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 100%;
+    padding: 0 5%;
+    background-color: #fff;
+    padding-block: 30px;
+  }
+}

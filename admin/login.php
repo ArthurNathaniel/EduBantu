@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        
+
         // Verify password
         if (password_verify($password, $row['password'])) {
             // Start session and redirect to dashboard
@@ -33,19 +33,40 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+    <?php include '../cdn.php'; ?>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
+
 <body>
-    <h2>Admin Login</h2>
-    <form method="POST" action="login.php">
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
-        
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
-        
-        <button type="submit">Login</button>
-    </form>
+    <div class="login_all">
+        <div class="login_box">
+            <div class="logo"></div>
+         <div class="forms_title">
+         <h2>Admin Login</h2>
+         </div>
+            <form method="POST" action="login.php">
+                <div class="forms">
+                    <label>Email:</label>
+                    <input type="email" placeholder="Enter your email address" name="email" required>
+                </div>
+
+                <div class="forms">
+                    <label>Password:</label>
+                    <input type="password" placeholder="Enter your password" name="password" required>
+                </div>
+
+                <div class="forms">
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
