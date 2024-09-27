@@ -12,9 +12,8 @@ body {
   font-family: "Rubik", sans-serif;
   font-weight: 400;
   font-style: normal;
-  background-color: #F4F5FF;
+  background-color: #f4f5ff;
 }
-
 
 .forms {
   width: 100%;
@@ -24,38 +23,133 @@ body {
   position: relative;
 }
 
-
 .forms input {
   height: 40px;
   width: 100%;
   padding-left: 3%;
-  border: 1px solid #DAD9DA;
+  border: 1px solid #dad9da;
 }
-
 
 .forms select {
   height: 40px;
   width: 100%;
   padding-left: 3%;
-  border: 1px solid #DAD9DA;
+  border: 1px solid #dad9da;
 }
 
-.forms button{
-  background-color: #673DE6;
+.forms button {
+  background-color: #673de6;
   height: 40px;
   width: 100%;
   border: none;
-  color: #F4F5FF;
+  color: #f4f5ff;
 }
 
-.forms_title{
+.forms_title {
   margin-block: 30px;
 }
 
-input:focus{
+input:focus {
   outline: none;
 }
 
-select:focus{
+select:focus {
   outline: none;
 }
+
+.navbar_all {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 454;
+  padding-block: 5px;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  background-color: transparent;
+}
+
+.logo {
+  height: 95px;
+  width: 150px;
+  background-image: url(../images/logo.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mobile a {
+  padding: 15px;
+  color: #000;
+  /* text-transform: uppercase; */
+}
+
+.mobile a:hover {
+  color: #673de6;
+}
+
+#toggleButton {
+  background-color: #673de6;
+  border: none;
+  padding: 10px;
+  top: 0;
+  position: fixed;
+  z-index: 5260;
+}
+
+#toggleButton i {
+  color: #fff;
+  font-size: 20px;
+}
+
+.mobile {
+  display: none;
+}
+
+.mobile {
+  position: absolute;
+  top: 0px;
+  z-index: 4554;
+  left: 0;
+  width: 250px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  display: none;
+  height: 100vh;
+  padding-top: 45px;
+}
+
+.mobile a {
+  border-bottom: 2px dashed #dad9da;
+  width: 100%;
+  padding: 0 10%;
+  padding-block: 20px;
+}
+
+
+.logout {
+  position: fixed;
+  bottom: 20px;
+  width: 250px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fc5185;
+  border: none;
+}
+
+.logout a {
+  color: #fff !important;
+  border: none;
+}
+
+.navbar_all .mobile a.active {
+background-color: #673de6;
+color: #FFF;
+
+}
+

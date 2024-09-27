@@ -56,6 +56,7 @@ if (isset($_GET['delete_id'])) {
 </head>
 
 <body>
+<?php include 'sidebar.php' ?>
     <div class="add_subject_all">
         <div class="forms_title">
             <h2>Add New Subject</h2>
