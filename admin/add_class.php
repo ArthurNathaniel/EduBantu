@@ -51,12 +51,10 @@ if (isset($_GET['delete_id'])) {
     <?php include '../cdn.php' ?>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/add_class.css">
-    <style>
-
-    </style>
 </head>
 
 <body>
+<?php include 'sidebar.php' ?>
     <div class="add_class_all">
         <div class="forms_title">
             <h2>Add New Class</h2>
