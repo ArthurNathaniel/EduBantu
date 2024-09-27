@@ -4,6 +4,7 @@ EduBantu is a comprehensive and user-friendly report card management system desi
 Whether you're a teacher looking to simplify grade entry, a parent wanting to track your child’s performance, a student reviewing your academic progress, or an administrator overseeing report generation and data management, EduBantu offers a seamless and efficient experience for all.
 
 Key Features:
+
 For Teachers: Easily input grades for students and generate professional, detailed report cards.
 
 For Parents: Stay informed with online access to your child's report card and academic progress.
