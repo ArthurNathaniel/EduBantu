@@ -108,6 +108,7 @@ if (isset($_GET['class_id'])) {
    
 </head>
 <body>
+<?php include 'sidebar.php' ?>
     <div class="assign_class_all">
   <div class="forms_title">
   <h2>Assign Subjects to Classes</h2>
