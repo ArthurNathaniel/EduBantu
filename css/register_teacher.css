@@ -1,0 +1,16 @@
+.register_teacher_all{
+    padding: 0 10%;
+}
+.forms_groups{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr ;
+    gap: 30px;
+}
+
+.forms{
+    margin-bottom: 0px !important;
+}
+
+.forms button{
+    margin-top: 30px;
+}
