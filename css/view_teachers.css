@@ -86,3 +86,14 @@ th {
 .delete{
     background-color: #fc5185 !important;
 }
+
+.fa-eye{
+    color: #673de6;
+}
+
+.fa-user-pen{
+    color: #673de6;
+}
+.fa-trash{
+    color: #fc5185;
+}

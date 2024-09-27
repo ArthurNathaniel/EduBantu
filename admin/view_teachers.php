@@ -33,9 +33,7 @@ $result = $conn->query($sql);
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
-                    <th>Email</th>
                     <th>Phone</th>
                     <th>Actions</th>
                 </tr>
@@ -43,10 +41,9 @@ $result = $conn->query($sql);
             <tbody>
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?php echo $row['id']; ?></td>
+
                     <td><?php echo $row['first_name'] ; ?></td>
                     <!-- <td><?php echo $row['first_name'] . ' ' . ($row['middle_name'] ? $row['middle_name'] . ' ' : '') . $row['last_name']; ?></td> -->
-                    <td><?php echo $row['email']; ?></td>
                     <td><?php echo $row['phone']; ?></td>
                     <td class="actions_btn">
                         <button class="view-btn" onclick="viewTeacher(<?php echo $row['id']; ?>)"><i class="fa-solid fa-eye"></i></button>
