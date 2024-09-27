@@ -124,9 +124,6 @@ if (isset($_GET['delete_id'])) {
                 ?>
             </tbody>
         </table>
-
-        <p><a href="dashboard.php">Back to Dashboard</a></p>
-
         <script>
             // Function to open the modal
             function openModal(modalId) {

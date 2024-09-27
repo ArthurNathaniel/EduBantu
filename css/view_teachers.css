@@ -58,6 +58,7 @@ th {
 .actions_btn{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .actions_btn button{
@@ -66,7 +67,7 @@ th {
     padding: 14px;
 }
 
-#viewModal p{
+.modal p{
     margin-top: 20px;
 }
 
@@ -82,6 +83,8 @@ th {
     background-color: #673de6;
     color: #FFF;
 }
+
+
 
 .delete{
     background-color: #fc5185 !important;

@@ -154,8 +154,6 @@ if (isset($_GET['delete_id'])) {
             }
         }
     </script>
-
-    <p><a href="dashboard.php">Back to Dashboard</a></p>
 </body>
 
 </html>
