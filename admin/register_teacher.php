@@ -44,6 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
+        // Handle class assignment
+        if ($class_id == 0) {
+            $class_id = 'NULL'; // Set class_id to NULL if 'None' is selected
+        } else {
+            $class_id = "'" . $class_id . "'"; // Otherwise, wrap it in quotes
+        }
+
         // Insert teacher data into the database
         $sql = "INSERT INTO teachers 
                 (first_name, middle_name, last_name, dob, gender, education_level, email, phone, house_number, hometown, emergency_contact_name, emergency_contact_phone, emergency_contact_relationship, class_id, password)

@@ -1,7 +1,13 @@
 <?php
 include 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+function respond($success, $message) {
+    echo json_encode(['success' => $success, 'message' => $message]);
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve and sanitize input data
     $id = $_POST['id'];
     $first_name = $_POST['first_name'];
     $middle_name = $_POST['middle_name'];
@@ -16,15 +22,103 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $emergency_contact_name = $_POST['emergency_contact_name'];
     $emergency_contact_phone = $_POST['emergency_contact_phone'];
     $emergency_contact_relationship = $_POST['emergency_contact_relationship'];
-    $class_id = $_POST['class_id'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hash the password
-
-    $sql = "UPDATE teachers SET first_name='$first_name', middle_name='$middle_name', last_name='$last_name', dob='$dob', gender='$gender', education_level='$education_level', email='$email', phone='$phone', house_number='$house_number', hometown='$hometown', emergency_contact_name='$emergency_contact_name', emergency_contact_phone='$emergency_contact_phone', emergency_contact_relationship='$emergency_contact_relationship', class_id='$class_id', password='$password' WHERE id='$id'";
     
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['message' => 'Teacher updated successfully.']);
-    } else {
-        echo json_encode(['message' => 'Error updating teacher: ' . $conn->error]);
+    // Handle class_id
+    $class_id = ($_POST['class_id'] === 'none') ? NULL : $_POST['class_id'];
+    
+    $password = $_POST['password'];
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Check if class_id is valid
+    if ($class_id !== NULL) {
+        $class_check_sql = "SELECT id FROM classes WHERE id = ?";
+        $stmt = $conn->prepare($class_check_sql);
+        $stmt->bind_param("i", $class_id);
+        $stmt->execute();
+        $class_check_result = $stmt->get_result();
+
+        if ($class_check_result->num_rows === 0) {
+            respond(false, 'Invalid class ID.');
+        }
+        $stmt->close();
     }
+
+    // Prepare the update SQL statement
+    $update_sql = "UPDATE teachers SET 
+        first_name=?, 
+        middle_name=?, 
+        last_name=?, 
+        dob=?, 
+        gender=?, 
+        education_level=?, 
+        email=?, 
+        phone=?, 
+        house_number=?, 
+        hometown=?, 
+        emergency_contact_name=?, 
+        emergency_contact_phone=?, 
+        emergency_contact_relationship=?, 
+        class_id=?, 
+        password=? 
+    WHERE id=?";
+
+    $stmt = $conn->prepare($update_sql);
+    
+    // Bind parameters based on class_id being NULL or not
+    if ($class_id === NULL) {
+        $stmt->bind_param("ssssssssssssssi", 
+            $first_name, 
+            $middle_name, 
+            $last_name, 
+            $dob, 
+            $gender, 
+            $education_level, 
+            $email, 
+            $phone, 
+            $house_number, 
+            $hometown, 
+            $emergency_contact_name, 
+            $emergency_contact_phone, 
+            $emergency_contact_relationship, 
+            $hashed_password, 
+            $id
+        );
+    } else {
+        $stmt->bind_param("ssssssssssssssi", 
+            $first_name, 
+            $middle_name, 
+            $last_name, 
+            $dob, 
+            $gender, 
+            $education_level, 
+            $email, 
+            $phone, 
+            $house_number, 
+            $hometown, 
+            $emergency_contact_name, 
+            $emergency_contact_phone, 
+            $emergency_contact_relationship, 
+            $class_id, 
+            $hashed_password, 
+            $id
+        );
+    }
+
+    // Execute the statement and handle response
+    if ($stmt->execute()) {
+        if ($stmt->affected_rows > 0) {
+            respond(true, 'Teacher details updated successfully.');
+        } else {
+            respond(false, 'No changes made to the teacher details.');
+        }
+    } else {
+        respond(false, 'Failed to update teacher details: ' . $stmt->error);
+    }
+
+    // Close the statement
+    $stmt->close();
 }
+
+// Close the database connection
+$conn->close();
 ?>
