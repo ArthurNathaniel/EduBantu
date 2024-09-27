@@ -22,59 +22,7 @@ $result = $conn->query($sql);
     <?php include '../cdn.php'; ?>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/view_teachers.css">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+   
 </head>
 <body>
 <?php include 'sidebar.php' ?>
@@ -96,13 +44,14 @@ $result = $conn->query($sql);
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['first_name'] . ' ' . ($row['middle_name'] ? $row['middle_name'] . ' ' : '') . $row['last_name']; ?></td>
+                    <td><?php echo $row['first_name'] ; ?></td>
+                    <!-- <td><?php echo $row['first_name'] . ' ' . ($row['middle_name'] ? $row['middle_name'] . ' ' : '') . $row['last_name']; ?></td> -->
                     <td><?php echo $row['email']; ?></td>
                     <td><?php echo $row['phone']; ?></td>
-                    <td>
-                        <button class="view-btn" onclick="viewTeacher(<?php echo $row['id']; ?>)">View</button>
-                        <button class="edit-btn" onclick="openEditModal(<?php echo $row['id']; ?>)">Edit</button>
-                        <button class="delete-btn" onclick="openDeleteModal(<?php echo $row['id']; ?>)">Delete</button>
+                    <td class="actions_btn">
+                        <button class="view-btn" onclick="viewTeacher(<?php echo $row['id']; ?>)"><i class="fa-solid fa-eye"></i></button>
+                        <button class="edit-btn" onclick="openEditModal(<?php echo $row['id']; ?>)"><i class="fa-solid fa-user-pen"></i></button>
+                        <button class="delete-btn" onclick="openDeleteModal(<?php echo $row['id']; ?>)"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
                 <?php endwhile; ?>
@@ -123,7 +72,9 @@ $result = $conn->query($sql);
 <div id="editModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeEditModal()">&times;</span>
-        <h2>Edit Teacher Details</h2>
+    <div class="forms_title">
+    <h2>Edit Teacher Details</h2>
+    </div>
         <form id="editForm">
             <input type="hidden" name="id" id="editTeacherId">
 
@@ -232,7 +183,9 @@ $result = $conn->query($sql);
                 <input type="password" placeholder="Enter your password" name="password" id="editPassword" required>
             </div>
 
-            <button type="submit">Save Changes</button>
+       <div class="forms">
+       <button type="submit">Save Changes</button>
+       </div>
         </form>
     </div>
 </div>
@@ -245,8 +198,10 @@ $result = $conn->query($sql);
             <h2>Delete Teacher</h2>
             <p>Are you sure you want to delete this teacher?</p>
             <input type="hidden" id="deleteTeacherId">
-            <button onclick="deleteTeacher()">Yes, Delete</button>
+            <div class="modal_delete">
+            <button onclick="deleteTeacher()" class="delete">Yes, Delete</button>
             <button onclick="closeDeleteModal()">Cancel</button>
+            </div>
         </div>
     </div>
 
