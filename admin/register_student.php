@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <?php include 'sidebar.php' ?>
     <div class="register_student_all">
-        <h1>Register Student</h1>
+        <h2>Register Student</h2>
 
         <form action="register_student.php" method="POST" enctype="multipart/form-data">
 

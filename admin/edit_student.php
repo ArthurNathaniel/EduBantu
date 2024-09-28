@@ -79,7 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Edit Student</title>
     <?php include '../cdn.php'; ?>
     <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/edit_student.css">
+    <link rel="stylesheet" href="../css/view_students.css">
+    <link rel="stylesheet" href="../css/register_student.css">
 </head>
 
 <body>
@@ -100,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="forms_groups">
+         
                 <div class="forms">
                     <label for="name">Full Name:</label>
                     <input type="text" name="name" value="<?php echo $student['name']; ?>" required>
@@ -118,6 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="date" name="dob" value="<?php echo $student['dob']; ?>" required>
                 </div>
             </div>
+          
 
             <div class="forms_title">
                 <h3>Parent Information</h3>

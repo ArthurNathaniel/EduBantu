@@ -1,5 +1,4 @@
 <?php
-include 'db.php';
 session_start();
 
 // Check if admin is logged in
@@ -8,96 +7,37 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-// Check if ID is set
-if (!isset($_GET['id'])) {
-    echo "<script>alert('Teacher ID is missing!'); window.location.href = 'register_teacher.php';</script>";
-    exit();
+require 'db.php'; // Include your database connection
+
+// Fetch total number of students
+$total_students_sql = "SELECT COUNT(*) as total FROM students";
+$total_students_result = $conn->query($total_students_sql);
+$total_students = $total_students_result->fetch_assoc()['total'];
+
+// Fetch gender distribution
+$gender_distribution_sql = "SELECT gender, COUNT(*) as count FROM students GROUP BY gender";
+$gender_distribution_result = $conn->query($gender_distribution_sql);
+$gender_distribution = [];
+while ($row = $gender_distribution_result->fetch_assoc()) {
+    $gender_distribution[$row['gender']] = $row['count'];
 }
 
-$teacher_id = $_GET['id'];
-
-// Fetch teacher details
-$sql = "SELECT * FROM teachers WHERE id = '$teacher_id'";
-$result = $conn->query($sql);
-$teacher = $result->fetch_assoc();
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the form data
-    $first_name = $_POST['first_name'];
-    $middle_name = $_POST['middle_name'];
-    $last_name = $_POST['last_name'];
-    $dob = $_POST['dob'];
-    $gender = $_POST['gender'];
-    $education_level = $_POST['education_level'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $house_number = $_POST['house_number'];
-    $hometown = $_POST['hometown'];
-    $emergency_contact_name = $_POST['emergency_contact_name'];
-    $emergency_contact_phone = $_POST['emergency_contact_phone'];
-    $emergency_contact_relationship = $_POST['emergency_contact_relationship'];
-    $class_id = $_POST['class_id'];
-
-    // Check for duplicate teacher registration
-    $check_sql = "SELECT * FROM teachers WHERE (email = '$email' OR phone = '$phone') AND id != '$teacher_id'";
-    $check_result = $conn->query($check_sql);
-
-    if ($check_result->num_rows > 0) {
-        echo "<script>alert('Teacher with this email or phone number already exists!'); window.location.href = 'edit_teacher.php?id=$teacher_id';</script>";
-    } else {
-        // Prepare the update statement
-        $stmt = $conn->prepare("UPDATE teachers SET 
-            first_name = ?, 
-            middle_name = ?, 
-            last_name = ?, 
-            dob = ?, 
-            gender = ?, 
-            education_level = ?, 
-            email = ?, 
-            phone = ?, 
-            house_number = ?, 
-            hometown = ?, 
-            emergency_contact_name = ?, 
-            emergency_contact_phone = ?, 
-            emergency_contact_relationship = ?, 
-            class_id = ? 
-            WHERE id = ?");
-
-        // Check for statement preparation
-        if (!$stmt) {
-            die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
-        }
-
-        // Bind parameters
-        $stmt->bind_param('ssssssssssssssi', 
-            $first_name, 
-            $middle_name, 
-            $last_name, 
-            $dob, 
-            $gender, 
-            $education_level, 
-            $email, 
-            $phone, 
-            $house_number, 
-            $hometown, 
-            $emergency_contact_name, 
-            $emergency_contact_phone, 
-            $emergency_contact_relationship, 
-            $class_id, 
-            $teacher_id
-        );
-
-        // Execute the statement
-        if ($stmt->execute()) {
-            echo "<script>alert('Teacher updated successfully!'); window.location.href = 'register_teacher.php';</script>";
-        } else {
-            echo "<script>alert('Error: " . $stmt->error . "'); window.location.href = 'edit_teacher.php?id=$teacher_id';</script>";
-        }
-
-        // Close the statement
-        $stmt->close();
-    }
+// Fetch total number of students in each class
+$class_distribution_sql = "SELECT class_name, COUNT(*) as count FROM students GROUP BY class_name";
+$class_distribution_result = $conn->query($class_distribution_sql);
+$class_distribution = [];
+while ($row = $class_distribution_result->fetch_assoc()) {
+    $class_distribution[$row['class_name']] = $row['count'];
 }
+
+// Fetch gender distribution in each class
+$gender_class_distribution_sql = "SELECT class_name, gender, COUNT(*) as count FROM students GROUP BY class_name, gender";
+$gender_class_distribution_result = $conn->query($gender_class_distribution_sql);
+$gender_in_class = [];
+while ($row = $gender_class_distribution_result->fetch_assoc()) {
+    $gender_in_class[$row['class_name']][$row['gender']] = $row['count'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -105,119 +45,228 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Teacher</title>
-    <?php include '../cdn.php'; ?>
+    <title>Admin Dashboard</title>
+    <?php include '../cdn.php' ?>
     <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/register_teacher.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <?php include 'sidebar.php' ?>
-    <div class="register_teacher_all">
-        <div class="forms_title">
-            <h2>Edit Teacher</h2>
-        </div>
-        <form method="POST" action="edit_teacher.php?id=<?php echo $teacher_id; ?>">
-            <div class="forms_groups">
+    <h2>Welcome to the Admin Dashboard</h2>
+    
+    <p>Hello, <?php echo $_SESSION['admin']; ?>! You are logged in as an admin.</p>
 
-                <div class="forms">
-                    <label>First Name:</label>
-                    <input type="text" placeholder="Enter your first name" name="first_name" value="<?php echo $teacher['first_name']; ?>" required>
-                </div>
+    <p><a href="logout.php">Logout</a></p>
 
-                <div class="forms">
-                    <label>Middle Name:</label>
-                    <input type="text" placeholder="Enter your middle name" name="middle_name" value="<?php echo $teacher['middle_name']; ?>">
-                </div>
-
-                <div class="forms">
-                    <label>Last Name:</label>
-                    <input type="text" placeholder="Enter your last name" name="last_name" value="<?php echo $teacher['last_name']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Date of Birth:</label>
-                    <input type="date" name="dob" value="<?php echo $teacher['dob']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Gender:</label>
-                    <select name="gender" required>
-                        <option value="" selected hidden>Select Gender</option>
-                        <option value="Male" <?php if($teacher['gender'] == 'Male') echo 'selected'; ?>>Male</option>
-                        <option value="Female" <?php if($teacher['gender'] == 'Female') echo 'selected'; ?>>Female</option>
-                    </select>
-                </div>
-
-                <div class="forms">
-                    <label>Level of Education:</label>
-                    <select name="education_level" required>
-                        <option value="" selected hidden>Select Level of Education</option>
-                        <option value="SHS" <?php if($teacher['education_level'] == 'SHS') echo 'selected'; ?>>SHS</option>
-                        <option value="Diploma" <?php if($teacher['education_level'] == 'Diploma') echo 'selected'; ?>>Diploma</option>
-                        <option value="HND" <?php if($teacher['education_level'] == 'HND') echo 'selected'; ?>>HND</option>
-                        <option value="Degree" <?php if($teacher['education_level'] == 'Degree') echo 'selected'; ?>>Degree</option>
-                        <option value="Master" <?php if($teacher['education_level'] == 'Master') echo 'selected'; ?>>Master</option>
-                        <option value="PhD" <?php if($teacher['education_level'] == 'PhD') echo 'selected'; ?>>PhD</option>
-                    </select>
-                </div>
-
-                <div class="forms">
-                    <label>Email:</label>
-                    <input type="email" placeholder="Enter your email address" name="email" value="<?php echo $teacher['email']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Phone Number:</label>
-                    <input type="text" placeholder="Enter your phone number" name="phone" value="<?php echo $teacher['phone']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>House Number:</label>
-                    <input type="text" placeholder="Enter your house number" name="house_number" value="<?php echo $teacher['house_number']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Hometown:</label>
-                    <input type="text" placeholder="Enter your hometown" name="hometown" value="<?php echo $teacher['hometown']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Emergency Contact Name:</label>
-                    <input type="text" placeholder="Enter emergency contact name" name="emergency_contact_name" value="<?php echo $teacher['emergency_contact_name']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Emergency Contact Phone:</label>
-                    <input type="text" placeholder="Enter emergency contact phone" name="emergency_contact_phone" value="<?php echo $teacher['emergency_contact_phone']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Emergency Contact Relationship:</label>
-                    <input type="text" placeholder="Enter relationship" name="emergency_contact_relationship" value="<?php echo $teacher['emergency_contact_relationship']; ?>" required>
-                </div>
-
-                <div class="forms">
-                    <label>Class:</label>
-                    <select name="class_id" required>
-                        <option value="" selected hidden>Select Class</option>
-                        <?php
-                        // Fetch classes from the database
-                        $class_sql = "SELECT * FROM classes";
-                        $class_result = $conn->query($class_sql);
-                        while ($class = $class_result->fetch_assoc()) {
-                            $selected = ($teacher['class_id'] == $class['id']) ? 'selected' : '';
-                            echo "<option value='{$class['id']}' $selected>{$class['class_name']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-
-                <div class="form_btns">
-                    <button type="submit" class="submit_btn">Update Teacher</button>
-                </div>
-
-            </div>
-        </form>
+    <div>
+        <h3>Admin Actions</h3>
+        <ul>
+            <li><a href="add_student.php">Add Student</a></li>
+            <li><a href="view_reports.php">View Student Reports</a></li>
+        </ul>
     </div>
+
+    <div>
+        <h3>Dashboard Statistics</h3>
+        <p>Total Students: <?php echo $total_students; ?></p>
+
+        <canvas id="genderChart"></canvas>
+        <table border="1">
+            <caption>Gender Distribution</caption>
+            <thead>
+                <tr>
+                    <th>Gender</th>
+                    <th>Number of Students</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($gender_distribution as $gender => $count): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($gender); ?></td>
+                        <td><?php echo htmlspecialchars($count); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <canvas id="classChart"></canvas>
+        <table border="1">
+            <caption>Total Students in Each Class</caption>
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>Number of Students</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($class_distribution as $class_name => $count): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($class_name); ?></td>
+                        <td><?php echo htmlspecialchars($count); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <canvas id="genderInClassChart"></canvas>
+        <table border="1">
+            <caption>Gender Distribution in Each Class</caption>
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>Male Students</th>
+                    <th>Female Students</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($gender_in_class as $class_name => $genders): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($class_name); ?></td>
+                        <td><?php echo htmlspecialchars($genders['Male'] ?? 0); ?></td>
+                        <td><?php echo htmlspecialchars($genders['Female'] ?? 0); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Gender Distribution Chart
+        const genderDistribution = <?php echo json_encode($gender_distribution); ?>;
+        const genderChartCtx = document.getElementById('genderChart').getContext('2d');
+        const genderChart = new Chart(genderChartCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(genderDistribution),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: Object.values(genderDistribution),
+                    backgroundColor: ['#42a5f5', '#66bb6a'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gender Distribution of Students',
+                        font: {
+                            size: 20,
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Total Students in Each Class Chart
+        const classDistribution = <?php echo json_encode($class_distribution); ?>;
+        const classChartCtx = document.getElementById('classChart').getContext('2d');
+        const classChart = new Chart(classChartCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(classDistribution),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: Object.values(classDistribution),
+                    backgroundColor: ['#ffa726', '#fb8c00', '#ffb300', '#ffd740', '#ffeb3b'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Students in Each Class',
+                        font: {
+                            size: 20,
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gender Distribution in Each Class Chart
+        const genderInClassDistribution = <?php echo json_encode($gender_in_class); ?>;
+        const classLabels = Object.keys(genderInClassDistribution);
+        const maleCounts = classLabels.map(className => genderInClassDistribution[className]['Male'] || 0);
+        const femaleCounts = classLabels.map(className => genderInClassDistribution[className]['Female'] || 0);
+
+        const genderInClassChartCtx = document.getElementById('genderInClassChart').getContext('2d');
+        const genderInClassChart = new Chart(genderInClassChartCtx, {
+            type: 'bar',
+            data: {
+                labels: classLabels,
+                datasets: [
+                    {
+                        label: 'Male Students',
+                        data: maleCounts,
+                        backgroundColor: '#42a5f5',
+                    },
+                    {
+                        label: 'Female Students',
+                        data: femaleCounts,
+                        backgroundColor: '#66bb6a',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gender Distribution in Each Class',
+                        font: {
+                            size: 20,
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
