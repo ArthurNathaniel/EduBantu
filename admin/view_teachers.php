@@ -22,9 +22,6 @@ $teachers_result = $conn->query($teachers_sql);
     <?php include '../cdn.php'; ?>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/view_teachers.css">
-    <style>
-      
-    </style>
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
@@ -32,6 +29,12 @@ $teachers_result = $conn->query($teachers_sql);
         <div class="forms_title">
             <h2>Registered Teachers</h2>
         </div>
+
+        <!-- Search Input -->
+        <div class="forms">
+            <input type="text" id="searchInput" placeholder="Search for teachers by first name..." onkeyup="searchTeachers()">
+        </div>
+
         <table>
             <thead>
                 <tr>
@@ -40,7 +43,7 @@ $teachers_result = $conn->query($teachers_sql);
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="teachersTableBody">
                 <?php
                 if ($teachers_result->num_rows > 0) {
                     while ($teacher = $teachers_result->fetch_assoc()) {
@@ -66,7 +69,6 @@ $teachers_result = $conn->query($teachers_sql);
                         </td>
                       </tr>";
                 
-
                         // Modal for viewing teacher details
                         echo "
                         <div id='modal{$teacher['id']}' class='modal'>
@@ -78,7 +80,7 @@ $teachers_result = $conn->query($teachers_sql);
                                 <p>Last Name: {$teacher['last_name']}</p>
                                 <p>Date of Birth: {$teacher['dob']}</p>
                                 <p>Gender: {$teacher['gender']}</p>
-                                 <p>Education Level: {$teacher['education_level']}</p>
+                                <p>Education Level: {$teacher['education_level']}</p>
                                 <p>Email: {$teacher['email']}</p>
                                 <p>Phone Number: {$teacher['phone']}</p>
                                 <p>House Number: {$teacher['house_number']}</p>
@@ -107,13 +109,48 @@ $teachers_result = $conn->query($teachers_sql);
             document.getElementById('modal' + id).style.display = "none";
         }
 
-        // Close the modal when the user clicks anywhere outside of it
         window.onclick = function(event) {
             var modals = document.getElementsByClassName('modal');
             for (let i = 0; i < modals.length; i++) {
                 if (event.target == modals[i]) {
                     modals[i].style.display = "none";
                 }
+            }
+        }
+
+        function searchTeachers() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const tableBody = document.getElementById('teachersTableBody');
+            const rows = tableBody.getElementsByTagName('tr');
+            let found = false; // Flag to track if any row matches
+            
+            // Clear previous no results row
+            const existingNoResultsRow = document.getElementById('noResultsRow');
+            if (existingNoResultsRow) {
+                existingNoResultsRow.remove();
+            }
+
+            for (let i = 0; i < rows.length; i++) {
+                const tdName = rows[i].getElementsByTagName('td')[0]; // Get the first name cell
+                if (tdName) {
+                    const txtValue = tdName.textContent || tdName.innerText;
+                    // Display rows that match the search input
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rows[i].style.display = ''; // Show row
+                        found = true; // A match was found
+                    } else {
+                        rows[i].style.display = 'none'; // Hide row
+                    }
+                }
+            }
+
+            // Show no results message if no matches were found
+            if (!found) {
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.id = 'noResultsRow';
+                noResultsRow.innerHTML = "<td colspan='3' style=' text-align: center;'>No results found for your search.</td>";
+                tableBody.appendChild(noResultsRow);
             }
         }
     </script>

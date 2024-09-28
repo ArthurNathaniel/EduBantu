@@ -88,11 +88,11 @@ $result = $stmt->get_result();
                     <td><img class="profile-pic" src="uploads/students/<?php echo $row['profile_image']; ?>" alt="Profile Image"></td>
                     <td><?php echo $row['name']; ?></td>
                     <td><?php echo $row['class_name']; ?></td>
-                    <td>
-                        <button onclick="viewDetails(<?php echo $row['id']; ?>)">View All Details</button>
-                        <a href="edit_student.php?id=<?php echo $row['id']; ?>">Edit</a>
+                    <td class='actions_btn'>
+                        <button onclick="viewDetails(<?php echo $row['id']; ?>)"><i class='fa-solid fa-eye'></i></button>
+                        <a href="edit_student.php?id=<?php echo $row['id']; ?>"><i class='fa-solid fa-user-pen'></i></a>
                         <a href="delete_student.php?id=<?php echo $row['id']; ?>"
-                            onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
+                            onclick="return confirm('Are you sure you want to delete this student?');"><i class='fa-solid fa-trash'></i></a>
                     </td>
                 </tr>
             <?php endwhile; ?>

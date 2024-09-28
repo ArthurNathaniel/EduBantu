@@ -100,3 +100,12 @@ th {
 .fa-trash{
     color: #fc5185;
 }
+
+.search-container {
+    margin-bottom: 20px;
+}
+.no-results {
+    display: none; 
+    color: red;   
+    text-align: center; 
+}

@@ -59,12 +59,14 @@ th {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
 }
 
 .actions_btn button{
     background-color: transparent;
     border: none;
-    padding: 14px;
+    padding: 19px;
+    cursor: pointer;
 }
 
 .modal p{
@@ -90,6 +92,7 @@ th {
     border: none;
     background-color: #673de6;
     color: #FFF;
+ 
 }
 
 
