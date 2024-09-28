@@ -17,6 +17,7 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
         <a href="assign_subject.php" class="<?= $current_page === 'assign_subject.php' ? 'active' : '' ?>">Assign Subject</a>
         <a href="register_teacher.php" class="<?= $current_page === 'register_teacher.php' ? 'active' : '' ?>">Register Teacher</a>
         <a href="view_teachers.php" class="<?= $current_page === 'view_teachers.php' ? 'active' : '' ?>">View Teachers</a>
+        <a href="register_student.php" class="<?= $current_page === 'register_student.php' ? 'active' : '' ?>">Register Student</a>
 
 
         

@@ -1,0 +1,102 @@
+.view_teachers_all{
+    padding: 0 10%;
+}
+table,
+th,
+td {
+  border: 1px solid #dad9da;
+  border-collapse: collapse;
+  padding: 10px;
+  text-align: left;
+}
+table {
+  width: 100%;
+}
+
+th {
+  background-color: #673de6;
+  color: #fefefe;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.actions_btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions_btn button{
+    background-color: transparent;
+    border: none;
+    padding: 14px;
+}
+
+.modal p{
+    margin-top: 20px;
+}
+
+.modal_delete{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal_delete button{
+    padding: 15px 45px;
+    border: none;
+    background-color: #673de6;
+    color: #FFF;
+}
+
+
+
+.delete{
+    background-color: #fc5185 !important;
+}
+
+.fa-eye{
+    color: #673de6;
+}
+
+.fa-user-pen{
+    color: #673de6;
+}
+.fa-trash{
+    color: #fc5185;
+}
