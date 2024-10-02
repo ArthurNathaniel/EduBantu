@@ -3,14 +3,17 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
 ?>
 
 <div class="navbar_all">
+
     <button id="toggleButton">
         <i class="fa-solid fa-bars-staggered"></i>
     </button>
     <div class="logout">
-            <a href="logout.php" class="<?= $current_page === 'logout.php' ? 'active' : '' ?>">Logout</a>
-        </div>
+        <a href="logout.php" class="<?= $current_page === 'logout.php' ? 'active' : '' ?>">Logout</a>
+    </div>
+
+
     <div class="mobile">
-        <div class="logo"></div>
+        <!-- <div class="logo"></div> -->
         <a href="dashboard.php" class="<?= $current_page === 'dashboard.php' ? 'active' : '' ?>">Dashboard</a>
         <a href="add_class.php" class="<?= $current_page === 'add_class.php' ? 'active' : '' ?>">Add Class</a>
         <a href="add_subject.php" class="<?= $current_page === 'add_subject.php' ? 'active' : '' ?>">Add Subject</a>
@@ -19,11 +22,10 @@ $current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
         <a href="view_teachers.php" class="<?= $current_page === 'view_teachers.php' ? 'active' : '' ?>">View Teachers</a>
         <a href="register_student.php" class="<?= $current_page === 'register_student.php' ? 'active' : '' ?>">Register Student</a>
         <a href="view_students.php" class="<?= $current_page === 'view_students.php' ? 'active' : '' ?>">View Students</a>
-
-
-        
-        
+        <a href="add_accountants.php" class="<?= $current_page === 'add_accountants.php' ? 'active' : '' ?>">Register Accountant</a>
+        <a href="view_accountants.php" class="<?= $current_page === 'view_accountants.php' ? 'active' : '' ?>">View Accountants</a>
     </div>
+
 </div>
 
 

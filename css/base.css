@@ -111,7 +111,10 @@ select:focus {
   display: none;
 
 }
-
+.whole{
+  height: 100vh;
+  background-color: #f4f4f4;
+}
 .mobile {
   position: absolute;
   top: 0px;
@@ -123,8 +126,11 @@ select:focus {
   flex-direction: column;
   display: none;
   height: 100vh;
-  padding-top: 45px;
-  overflow-y: scroll;
+  padding-block: 50px;
+  overflow-y: auto; 
+  border-radius: 8px;
+  scrollbar-width: thin; 
+
 }
 
 .mobile a {
@@ -158,4 +164,5 @@ background-color: #673de6;
 color: #FFF;
 
 }
+
 
